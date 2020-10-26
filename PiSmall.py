@@ -18,7 +18,7 @@ messages = 0
 #This function generates public private key pair for all the receivers
 def setup(x):
 
-
+    #Set up Step 1: Generate public and secret keys
     for i in range(x):
         #Generate public/private key pairs in a dictionary
         keys = elgamal.generate_keys()
@@ -31,6 +31,7 @@ def setup(x):
     #Sample cipher code line
     #cipher = elgamal.encrypt(keys['publicKey'], "This is the message I want to encrypt")
 
+    #Set up Step 2: Compute cipher texts that are encrypted with a 0 value
     for key in public_key_database:
         #returns a cipher string with public keys and sample msg
         cipher = elgamal.encrypt(key, '0')
@@ -39,6 +40,7 @@ def setup(x):
         cipher_database.append(cipher)
 
         #prints keys with respective cipher texts
+        #Set up Step 3: Announce public keys and cipher texts
         print(key, cipher, "\n")
 
     #This code is not part of the setup, just testing the decryption methods
@@ -53,11 +55,13 @@ def setup(x):
 def send(receiver):
     print("Sending encypted signal to receiver: " + str(receiver))
 
+    #Sending Signal Step 1: Was intended to have last signal posted on board be list of cipher texts...
     #Adding ciphertexts to message board
     for cipherMsg in cipher_database:
         message_board.append(cipherMsg)
 
 
+    #Sending Signal Step 2: Create sigma values and encrypt receiver with signal with value 1.
     #Initialise Sigma values and encrypt them:
     iter = 0
     for key in public_key_database:
@@ -72,9 +76,11 @@ def send(receiver):
         iter += 1
 
 
+    #Sending Signal Step 3: was intended to Compute C'm
     #Compute C_m' and append to message board
     for (oldCipher, sigValue) in zip(cipher_database, sigma_database):
         new_cipher = oldCipher + sigValue
+    #Sending Signal Step 4: was intending to append new C'm values to message board
         message_board.append(new_cipher)
     #num = 0
 
@@ -82,19 +88,23 @@ def send(receiver):
 #This function checks if a specific receiver has received a signal
 def receive(receiver):
 
+    #Reading a signal step 1: initialized t and t' values to last item on message board and previously accessed index in message board
     #Initializing specific indexes of message board to values t and t_prime
     t = message_board[-1]
     t_key = private_key_database[-1]
+
 
     t_prime = message_board[receiver]
     t_primeKey = private_key_database[receiver]
 
 
+    #Reading signal step 2: Decrypting t and t' values and saving them as l and l prime
     #Decrypting values at t and t_prime
     l = elgamal.decrypt(t_key, t)
     l_prime = elgamal.decrypt(t_primeKey, t_prime)
 
 
+    #Reading signal Steps 3-4: Where we ideally perform the binary search to find the signals on the message board.
     #This is where I get problems(When doing the binary search to find whether t prime is the correct message/signal)
     #if float(l) - float(l_prime) == 0:
 
