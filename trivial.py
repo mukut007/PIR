@@ -2,7 +2,7 @@ import rsa
 import sys
 import time
 import random
-
+from phe import paillier
 public_key_database = []
 private_key_database = []
 message_board = []
@@ -16,9 +16,9 @@ def setup(x):
     print("Initializing public key database. . ")
     for i in range(x):
 
-        (pubkey, privkey) = rsa.newkeys(512)
+        (pubkey, privkey) = paillier.generate_paillier_keypair()
         public_key_database.append(pubkey)
-        print(pubkey)
+        # print(pubkey)
         private_key_database.append(privkey)
 
     #time.sleep(10)
@@ -31,8 +31,9 @@ def send(receiver):
     print("Sending encypted signal to receiver: " + str(receiver))
 
     publicKey = public_key_database[receiver]
-    message = '1'.encode('utf8')
-    encrypted = rsa.encrypt(message, publicKey)
+    # message = '1'.encode('utf8')
+    # encrypted = rsa.encrypt(message, publicKey)
+    encrypted = publicKey.encrypt(1)
     message_board.append(encrypted)
 
     print ("Signal passing complete")
@@ -49,8 +50,8 @@ def count_message(receiver):
 
     for m in message_board:
         try:
-            message = rsa.decrypt(m, privateKey)
-            if message.decode('utf8') == '1':
+            message = privateKey.decrypt(m)
+            if message == 1:
                 messagecount += 1
         except:
             continue
@@ -69,11 +70,11 @@ def receive(receiver):
     for m in message_board:
 
         try:
-            message = rsa.decrypt(m, privateKey)
-            if message.decode('utf8') == '1':
+            message = privateKey.decrypt(m)
+            if message == 1:
                 print ("Message retrieved for receiver "+ str(receiver))
                 messagecount += 1
-                break
+                
 
 
         except:

@@ -2,13 +2,13 @@ import random
 import rsa
 import sys
 import time
-
+from phe import paillier
 
 def server_setup(receivers, server_table_1,server_table_2,server_pubkeys,server_privkeys):
-	(pubkey, privkey) = rsa.newkeys(512)
+	(pubkey, privkey) = paillier.generate_paillier_keypair()
 	server_pubkeys.append(pubkey)
 	server_privkeys.append(privkey)
-	(pubkey, privkey) = rsa.newkeys(512)
+	(pubkey, privkey) = paillier.generate_paillier_keypair()
 	server_pubkeys.append(pubkey)
 	server_privkeys.append(privkey)
 
@@ -39,11 +39,12 @@ def send(receiver,receivers):
 		bin1[receiver] = 1
 	slbin1 = [str(i) for i in bin1]
 	sbin1 = "".join(slbin1)
-	snum1 = str(int(sbin1, 2))
+	snum1 = int(sbin1, 2)
 	slbin2 = [str(i) for i in bin2]
 	sbin2 = "".join(slbin2)
-	snum2 = str(int(sbin2, 2))
-	signal = (rsa.encrypt(snum1.encode('utf8'), server_pubkeys[0]), rsa.encrypt(snum2.encode('utf8'), server_pubkeys[1]))
+	snum2 = int(sbin2, 2)
+	signal = (server_pubkeys[0].encrypt(snum1), server_pubkeys[1].encrypt(snum2))
+	# signal = (rsa.encrypt(snum1.encode('utf8'), server_pubkeys[0]), rsa.encrypt(snum2.encode('utf8'), server_pubkeys[1]))
 	return signal
 	
 
@@ -56,10 +57,10 @@ def server_compute(server_number, message_board, server_table_1, server_table_2,
 
 		enc_signal = message_board[i]
 	
-	
-		signal = rsa.decrypt(enc_signal[server_number], server_privkeys[server_number])
-		signal = signal.decode('utf8')
-		signal = "{0:b}".format(int(signal))
+		signal = server_privkeys[server_number].decrypt(enc_signal[server_number])
+		# signal = rsa.decrypt(enc_signal[server_number], server_privkeys[server_number])
+		# signal = signal.decode('utf8')
+		signal = "{0:b}".format(signal)
 		while(len(signal) != receivers):
 			signal = "0" + signal
 		print(signal)
