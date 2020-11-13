@@ -4,7 +4,7 @@ import time
 import random
 import operator
 import textwrap
-from phe import paillier
+import paillier
 from functools import reduce
 
 

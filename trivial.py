@@ -1,8 +1,10 @@
-import rsa
+# import rsa
 import sys
 import time
 import random
-from phe import paillier
+
+import paillier
+import encoding
 public_key_database = []
 private_key_database = []
 message_board = []
@@ -69,20 +71,19 @@ def receive(receiver):
 
     for m in message_board:
 
-        try:
-            message = privateKey.decrypt(m)
-            if message == 1:
-                print ("Message retrieved for receiver "+ str(receiver))
-                messagecount += 1
+        
+        message = privateKey.decrypt(m)
+        # print(message)
+        if message == 1:
+            print ("Message retrieved for receiver "+ str(receiver))
+            messagecount += 1
                 
 
 
-        except:
+        
 
-            continue
-
-        if (messagecount == 0) :
-            print("Receiver " + str(receiver) + " has " + str(messagecount) + " messages")
+    
+    print("Receiver " + str(receiver) + " has " + str(messagecount) + " messages")
 
 
 

@@ -2,7 +2,7 @@ import random
 import rsa
 import sys
 import time
-from phe import paillier
+import paillier
 
 def server_setup(receivers, server_table_1,server_table_2,server_pubkeys,server_privkeys):
 	(pubkey, privkey) = paillier.generate_paillier_keypair()
