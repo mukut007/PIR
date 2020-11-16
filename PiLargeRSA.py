@@ -40,9 +40,11 @@ def send(receiver,receivers):
 
 	slbin1 = [str(i) for i in bin1]
 	sbin1 = "".join(slbin1)
+	snum1 = str(int(sbin1, 2))
 	slbin2 = [str(i) for i in bin2]
 	sbin2 = "".join(slbin2)
-	signal = (rsa.encrypt(sbin1.encode('utf8'), server_pubkeys[0]), rsa.encrypt(sbin2.encode('utf8'), server_pubkeys[1]))
+	snum2 = str(int(sbin2, 2))
+	signal = (rsa.encrypt(snum1.encode('utf8'), server_pubkeys[0]), rsa.encrypt(snum2.encode('utf8'), server_pubkeys[1]))
 	return signal
 	
 
@@ -58,7 +60,7 @@ def server_compute(server_number, message_board, server_table_1, server_table_2,
 		# signal = server_privkeys[server_number].decrypt(enc_signal[server_number])
 		signal = rsa.decrypt(enc_signal[server_number], server_privkeys[server_number])
 		signal = signal.decode('utf8')
-		# signal = "{0:b}".format(int(signal))
+		signal = "{0:b}".format(int(signal))
 		while(len(signal) != receivers):
 			signal = "0" + signal
 		print(signal)
