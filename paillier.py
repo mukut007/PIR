@@ -31,7 +31,7 @@ from util import invert, powmod, getprimeover, isqrt
 # Paillier cryptosystem is based on integer factorisation.
 # The default is chosen to give a minimum of 128 bits of security.
 # https://www.keylength.com/en/4/
-DEFAULT_KEYSIZE = 512
+DEFAULT_KEYSIZE = 3072
 
 
 def generate_paillier_keypair(private_keyring=None, n_length=DEFAULT_KEYSIZE):
